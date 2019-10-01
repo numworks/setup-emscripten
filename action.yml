@@ -1,0 +1,6 @@
+name: 'Setup emscripten environment'
+description: 'Setup an emscripten environment'
+author: 'NumWorks'
+runs:
+  using: 'node12'
+  main: 'index.js'
