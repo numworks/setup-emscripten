@@ -1,6 +1,11 @@
 name: 'Setup emscripten environment'
 description: 'Setup an emscripten environment'
 author: 'NumWorks'
+inputs:
+  sdk:
+    description: 'Select which SDK to install'
+    required: false
+    default: 'latest'
 runs:
   using: 'node12'
   main: 'index.js'
