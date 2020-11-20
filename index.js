@@ -11,20 +11,22 @@ async function run() {
     await exec.exec('git', ['clone', 'https://github.com/emscripten-core/emsdk.git'])
     const emSdk = await tc.cacheDir('emsdk', 'emscripten', 'latest');
 
-    core.exportVariable('EMSDK', emSdk)
-    core.addPath(emSdk)
+    await exec.exec('echo', ['"EMSDK=' + emSdk + '"', '>>', '$GITHUB_ENV'])
+    await exec.exec('echo', [emSdk, '>>', '$GITHUB_PATH'])
+    await exec.exec('echo', ['$GITHUB_PATH'])
+
 
     await exec.exec('emsdk', ['install', sdk])
     await exec.exec('emsdk', ['activate', sdk])
 
     const emConfPath = path.join(emSdk, '.emscripten')
-    core.exportVariable('EM_CONFIG', emConfPath)
+    await exec.exec('echo', ['"EM_CONFIG=' + emConfPath + '"', '>>', '$GITHUB_ENV'])
     const emConf = fs.readFileSync(emConfPath).toString()
     const emRoot = path.join(emSdk, emConf.match(/EMSCRIPTEN_ROOT = emsdk_path \+ '(.*)'/)[1])
-    core.addPath(emRoot)
+    await exec.exec('echo', [emRoot, '>>', '$GITHUB_PATH'])
     const emNode = path.join(emSdk, emConf.match(/NODE_JS = emsdk_path \+ '(.*)'/)[1])
-    core.exportVariable('EMSDK_NODE', emNode)
-    core.addPath(path.dirname(emNode))
+    await exec.exec('echo', ['"EMSDK_NODE=' + emNode + '"', '>>', '$GITHUB_ENV'])
+    await exec.exec('echo', [path.dirname(emNode), '>>', '$GITHUB_PATH'])
   } catch (error) {
     core.setFailed(error.message);
   }
