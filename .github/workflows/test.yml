@@ -10,5 +10,16 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: npm ci
-    - uses: ./
+    - name: Install default version
+      uses: ./
+    - run: emcc --version
+    - name: Install specific version
+      uses: ./
+      with:
+        sdk: 1.39.16-fastcomp
+    - run: emcc --version
+    - name: Test caching of specific version
+      uses: ./
+      with:
+        sdk: 1.39.16-fastcomp
     - run: emcc --version
