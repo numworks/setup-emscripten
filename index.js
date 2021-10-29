@@ -9,24 +9,25 @@ async function run() {
   try {
     const sdk = core.getInput('sdk')
 
-    const cacheKey = 'emscripten';
-    let emSdk = tc.find(cacheKey, sdk);
+    const cacheKey = 'emscripten'
+    let emSdk = tc.find(cacheKey, sdk)
 
     if (emSdk && !sdk.includes('latest')) {
-      core.info(`Using cached version ${sdk}`);
+      core.info(`Using cached version ${sdk}`)
     } else {
-      core.info(`Cloning emsdk from https://github.com/emscripten-core/emsdk.git`);
+      core.info(`Cloning emsdk from https://github.com/emscripten-core/emsdk.git`)
+      await exec.exec('rm', ['-rf', 'emsdk'])
       await exec.exec('git', ['clone', 'https://github.com/emscripten-core/emsdk.git'])
-      core.info(`Installing emsdk ${sdk}`);
-      await exec.exec('./emsdk/emsdk', ['install', sdk]);
-      core.info(`Activating emsdk ${sdk}`);
-      await exec.exec('./emsdk/emsdk', ['activate', sdk]);
-      core.info(`Caching version ${sdk}`);
-      emSdk = await tc.cacheDir('emsdk', cacheKey, sdk);
+      core.info(`Installing emsdk ${sdk}`)
+      await exec.exec('./emsdk/emsdk', ['install', sdk])
+      core.info(`Activating emsdk ${sdk}`)
+      await exec.exec('./emsdk/emsdk', ['activate', sdk])
+      core.info(`Caching version ${sdk}`)
+      emSdk = await tc.cacheDir('emsdk', cacheKey, sdk)
     }
 
-    core.exportVariable('EMSDK', emSdk);
-    core.addPath(emSdk);
+    core.exportVariable('EMSDK', emSdk)
+    core.addPath(emSdk)
     const emConfPath = path.join(emSdk, '.emscripten')
     core.exportVariable('EM_CONFIG', emConfPath)
     const emConf = fs.readFileSync(emConfPath).toString()
@@ -36,7 +37,7 @@ async function run() {
     core.exportVariable('EMSDK_NODE', emNode)
     core.addPath(path.dirname(emNode))
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error.message)
   }
 }
 
