@@ -15,9 +15,5 @@ steps:
 
 ## How to update this action
 
- - Push a new commit with your changes on the `master` branch
- - Checkout the `v1` branch
- - Rebase `v1` on the top of the `master` branch
- - Remove the `node_modules` directory
- - Run `npm install` and add the `node_modules` folder to the repository by amending the last commit "Add prod dependencies"
- - Force push the `v1` branch to GitHub
+- Before merging a PR to the master branch, make sure you removed the `node_modules` directory and ran `npm install`.
+- Once CI is passing, update the "latest" tag.
