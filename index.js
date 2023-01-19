@@ -19,11 +19,10 @@ async function run() {
       core.info(`Cloning emsdk from https://github.com/emscripten-core/emsdk.git`)
       await exec.exec('rm', ['-rf', 'emsdk'])
       await exec.exec('git', ['clone', 'https://github.com/emscripten-core/emsdk.git'])
-      if (!sdk.includes('latest')) {
-        let tag = sdk.split("-")[0]
-        // fast-comp is not supported anymore on the main branch
+      if (sdk.includes('fastcomp')) {
+        // fast-comp is not supported anymore on the main branch, checkout an older branch
         await process.chdir('emsdk');
-        await exec.exec('git', ['checkout', tag])
+        await exec.exec('git', ['checkout', '3.1.29'])
         await process.chdir('..');
       }
       core.info(`Installing emsdk ${sdk}`)
